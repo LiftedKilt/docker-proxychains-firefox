@@ -1,5 +1,5 @@
-FROM ubuntu:14.04
-MAINTAINER Dennis Schridde <devurandom@gmx.net>
+FROM ubuntu:16.04
+MAINTAINER William Forsyth <williamdforsyth@gmail.com>
 ENV DEBIAN_FRONTEND noninteractive
 
 VOLUME /home

@@ -1,7 +1,8 @@
 #!/bin/bash
 
-SSH_USER="user"
+SSH_USER="test"
 SSH_SERVER="example.com"
+SSH_KEY="/home/test/id_rsa"
 
 container_exists() {
 	local container_name="$1"
@@ -21,7 +22,7 @@ for d in `find /dev/dri -type c` ; do
 	dri_devices+=(--device "${d}")
 done
 
-nohup docker run --rm --name="pf" --volumes-from storage --volume ~/.ssh/odin:/id_rsa --env SOCKS_SERVER="socks://172.17.0.1:5080" --env SOCKS_VERSION=5 --env DISPLAY="${DISPLAY}" --volume /tmp/.X11-unix:/tmp/.X11-unix --env PULSE_SERVER="unix:/tmp/pulse-unix" --volume /run/user/"${UID}"/pulse/native:/tmp/pulse-unix "${dri_devices[@]}" --volume /etc/localtime:/etc/localtime:ro --volume /etc/timezone:/etc/timezone:ro liftedkilt/proxychains-firefox "$@" >/dev/null 2>&1 &
+nohup docker run --rm --name="pf" --volumes-from storage --volume ${SSH_KEY}:/id_rsa --env SOCKS_SERVER="socks://172.17.0.1:5080" --env SOCKS_VERSION=5 --env DISPLAY="${DISPLAY}" --volume /tmp/.X11-unix:/tmp/.X11-unix --env PULSE_SERVER="unix:/tmp/pulse-unix" --volume /run/user/"${UID}"/pulse/native:/tmp/pulse-unix "${dri_devices[@]}" --volume /etc/localtime:/etc/localtime:ro --volume /etc/timezone:/etc/timezone:ro liftedkilt/proxychains-firefox:latest "$@" >/dev/null 2>&1 &
 while [[ ! $(docker ps | grep pf) ]]; do
 	sleep 1
 done
